@@ -7,9 +7,7 @@ Im folgenden wird zunächst mittels dem Quality Assesment (QA) die Datenqualitä
 
 Bei dem ausgewählten Datensatz handelt es sich um RNA-Seq Daten. 
 Zu Beginn wird die Library size überprüft. <img width="686" height="443" alt="Library size-final" src="https://github.com/user-attachments/assets/625570d4-fa5a-42a2-bf7c-ea6ae6f768a5" />
-Dabei wird die Menge der counts in Abhängigkeit der Probe dargestellt. In diesem Balkendiagramm wird deutlich, dass SRR1039513 die geringste Größe aufweist. SRR1039517 dagegen hat die größte Library. Diese Erkenntnis deutet darauf hin, dass es unterschiedliche Sequenziertiefen gibt. Daher ist für zukünftige Auswertungen eine Normalisierung notwendig. Ebenfalls wird die Anzahl der detektierten Gene in Abhängigkeit der jeweiligen Probe dargestellt.
-<img width="686" height="443" alt="anzahl gene-final" src="https://github.com/user-attachments/assets/348eb379-cd6f-4a36-81e8-3b37b6f0c3a5" />
-Hier kann die selbe Beobachtung wie im Plot zuvor festgestellt werden. 
+Dabei wird die Menge der counts in Abhängigkeit der Probe dargestellt. In diesem Balkendiagramm wird deutlich, dass SRR1039513 die geringste Größe aufweist. SRR1039517 dagegen hat die größte Library. Diese Erkenntnis deutet darauf hin, dass es unterschiedliche Sequenziertiefen gibt. Daher ist für zukünftige Auswertungen eine Normalisierung notwendig. Ebenfalls wird die Anzahl der detektierten Gene in Abhängigkeit der jeweiligen Probe dargestellt.<img width="686" height="443" alt="anzahl gene-final" src="https://github.com/user-attachments/assets/348eb379-cd6f-4a36-81e8-3b37b6f0c3a5" /> Hier kann die selbe Beobachtung wie im Plot zuvor festgestellt werden. 
 
 Danach wird eine Mean-Varianz-Analyse durchgeführt.
 <img width="686" height="443" alt="Mean-varianz-plot-final" src="https://github.com/user-attachments/assets/d3012c26-7580-495f-951b-52bb33ba0fe0" />
