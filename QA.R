@@ -8,11 +8,20 @@
 library(tidyverse)
 library(pheatmap)
 
+
+# 2. csv einlesen 
+
+Daten_roh_long <- read.csv(
+  "Daten_roh_long.csv",
+  stringsAsFactors = FALSE
+)
+
 # Welche Daten verwendet werden
 data <- Daten_roh_long
 
 
-# Kontrolle der Datenstruktur
+# 3. KONTROLLE DER DATENSTRUKTUR
+
 str(data)
 
 head(data)
@@ -51,9 +60,12 @@ unique(data$cell)
 
 unique(data$dex)
 
+
 # Hier startet die QA
 
-# 1. Count-Matrix
+
+# 4. Count-Matrix
+
 count_data <- data %>%
   select(
     gene_id,
@@ -80,7 +92,9 @@ dim(count_matrix)
 
 head(count_matrix)
 
-# 2. Library size
+
+# 5. Library size
+
 library_size <- colSums(count_matrix)
 
 library_size_df <- data.frame(
@@ -112,7 +126,8 @@ ggplot(
   )
 
 
-# 3. Anzahl der detektierten Gene 
+# 6. Anzahl der detektierten Gene
+
 detected_genes <- colSums(
   count_matrix > 0
 )
@@ -154,7 +169,8 @@ ggplot(
   )
 
 
-# 4. Mean-Varianz-Analyse 
+# 7. Mean-Varianz-Analyse
+
 gene_mean <- rowMeans(count_matrix)
 
 gene_variance <- apply(
@@ -190,7 +206,8 @@ ggplot(
   theme_minimal(base_size = 13)
 
 
-# 5. Mean-SD-Plot 
+# 8. Mean-SD-Plot
+
 gene_sd <- apply(
   count_matrix,
   1,
@@ -224,12 +241,14 @@ ggplot(
   theme_minimal(base_size = 13)
 
 
-# 6. Log2 Transformation und Mean-SD-plot mit log2 Daten 
+# 9. Log2 Transformation und Mean-SD-Plot mit log2 Daten
+
 log_counts <- log2(
   count_matrix + 1
 )
 
 # mean-sd mit log2
+
 log_mean <- rowMeans(log_counts)
 
 log_sd <- apply(
@@ -261,5 +280,3 @@ ggplot(
     y = "Standardabweichung"
   ) +
   theme_minimal(base_size = 13)
-
-
