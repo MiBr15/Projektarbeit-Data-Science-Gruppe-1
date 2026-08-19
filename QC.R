@@ -1,10 +1,20 @@
+# 1. PAKETE
+
 library(edgeR)
 library(dplyr)
 library(tidyr)
 library(readr)
 
-# Daten
-data <- Daten_roh_long
+
+# 2. DATEN EINLESEN
+
+data <- read_csv(
+  "Daten_roh_long.csv",
+  show_col_types = FALSE
+)
+
+
+# 3. AUSGABEVERZEICHNIS
 
 output_dir <- "C:/Users/komfo/OneDrive/Desktop/MASTER/2. Semester/limma_ausgabe"
 
@@ -12,10 +22,19 @@ if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
 
-# Spalten checken
-required_cols <- c("gene_id", "sample", "counts")
 
-missing_cols <- setdiff(required_cols, colnames(data))
+# 4. SPALTEN CHECKEN
+
+required_cols <- c(
+  "gene_id",
+  "sample",
+  "counts"
+)
+
+missing_cols <- setdiff(
+  required_cols,
+  colnames(data)
+)
 
 if (length(missing_cols) > 0) {
   stop(
@@ -23,6 +42,9 @@ if (length(missing_cols) > 0) {
     paste(missing_cols, collapse = ", ")
   )
 }
+
+
+# 5. DATENTYPEN KONTROLLIEREN
 
 data <- data %>%
   mutate(
@@ -41,14 +63,42 @@ data <- data %>%
   )
 
 
-count_matrix 
+# 6. COUNT-MATRIX AUS DER CSV ERSTELLEN
 
-# 1. edgeR DGEList erstellen
+count_data <- data %>%
+  select(
+    gene_id,
+    sample,
+    counts
+  ) %>%
+  pivot_wider(
+    names_from = sample,
+    values_from = counts
+  )
 
-dge <- DGEList(counts = count_matrix)
+count_data <- as.data.frame(count_data)
+
+rownames(count_data) <- count_data$gene_id
+
+count_data$gene_id <- NULL
+
+count_matrix <- as.matrix(count_data)
 
 
-# 2. Low-Count-Filterung mit filterByExpr()
+# Kontrolle
+
+cat("\nDimension der Count-Matrix: ")
+print(dim(count_matrix))
+
+
+# 7. edgeR DGEList ERSTELLEN
+
+dge <- DGEList(
+  counts = count_matrix
+)
+
+
+# 8. LOW-COUNT-FILTERUNG MIT filterByExpr()
 
 keep <- filterByExpr(dge)
 
@@ -60,22 +110,30 @@ if (sum(keep) == 0) {
   stop("Kein Gen erfüllt die filterByExpr()-Kriterien.")
 }
 
-filtered_count_matrix <- count_matrix[keep, , drop = FALSE]
+filtered_count_matrix <- count_matrix[
+  keep,
+  ,
+  drop = FALSE
+]
 
 
-# 3. Gefilterte Gene wieder in die ursprüngliche Long-Tabelle zurückführen
+# 9. GEFILTERTE GENE WIEDER IN DIE LONG-TABELLE ZURÜCKFÜHREN
 
-filtered_gene_ids <- rownames(filtered_count_matrix)
+filtered_gene_ids <- rownames(
+  filtered_count_matrix
+)
 
 data_filtered <- data %>%
-  filter(gene_id %in% filtered_gene_ids)
+  filter(
+    gene_id %in% filtered_gene_ids
+  )
 
-# 4. als csv speichern 
-timestamp <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+
+# 10. GEFILTERTE DATEN ALS CSV SPEICHERN
 
 output_file <- file.path(
   output_dir,
-  paste0("Daten_roh_long_filtered_", timestamp, ".csv")
+  "Daten_roh_long_filtered.csv"
 )
 
 write_csv(
@@ -84,12 +142,43 @@ write_csv(
   na = ""
 )
 
-# Ausgabe für Übersicht
+
+# 11. AUSGABE FÜR ÜBERSICHT
 
 cat("\nLow-Count-Filterung abgeschlossen.\n")
-cat("Gene vor Filterung: ", nrow(count_matrix), "\n")
-cat("Gene nach Filterung: ", nrow(filtered_count_matrix), "\n")
-cat("Entfernte Gene: ", sum(!keep), "\n")
-cat("Zeilen vor Filterung: ", nrow(data), "\n")
-cat("Zeilen nach Filterung: ", nrow(data_filtered), "\n")
-cat("Ausgabedatei: ", output_file, "\n")
+
+cat(
+  "Gene vor Filterung: ",
+  nrow(count_matrix),
+  "\n"
+)
+
+cat(
+  "Gene nach Filterung: ",
+  nrow(filtered_count_matrix),
+  "\n"
+)
+
+cat(
+  "Entfernte Gene: ",
+  sum(!keep),
+  "\n"
+)
+
+cat(
+  "Zeilen vor Filterung: ",
+  nrow(data),
+  "\n"
+)
+
+cat(
+  "Zeilen nach Filterung: ",
+  nrow(data_filtered),
+  "\n"
+)
+
+cat(
+  "Ausgabedatei: ",
+  output_file,
+  "\n"
+)
