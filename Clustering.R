@@ -12,12 +12,12 @@ library(pheatmap)
 # ------------------------------------------------------------
 
 vst_data <- read_csv(
-  "VST_transformierte_Daten.csv",
+  "data/VST_transformierte_Daten.csv",
   show_col_types = FALSE
 )
 
 metadata <- read_csv(
-  "Probeninformationen_Normalisierung.csv",
+  "data/Probeninformationen_Normalisierung.csv",
   show_col_types = FALSE
 )
 
