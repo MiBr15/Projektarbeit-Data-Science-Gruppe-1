@@ -21,6 +21,7 @@ In diesem Balkendiagramm wird deutlich, dass SRR1039513 die geringste Library Gr
 
 ## Anzahl der detektierten Gene
 Ebenfalls wird die Anzahl der detektierten Gene in Abhängigkeit der jeweiligen Probe dargestellt. Dazu wird spezifisch gezählz bei wie vielen Genen der Count größer als 0 ist.
+
 <img width="686" height="443" alt="anzahl gene-final" src="https://github.com/user-attachments/assets/348eb379-cd6f-4a36-81e8-3b37b6f0c3a5" /> 
 
 Hier kann die selbe Beobachtung wie im Plot zuvor festgestellt werden, dass SRR1039513 die geringste Anzahl an Genen aufweist. 
