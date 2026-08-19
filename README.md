@@ -15,6 +15,71 @@ Benötigte Dateien:
 - `VST_transformierte_Daten.csv`
 - `Probeninformationen_Normalisierung.csv`
 
+## Erklärung des Codes
+
+### 1. Daten einlesen
+
+Die VST-transformierten Expressionsdaten und die zugehörigen
+Probeninformationen werden aus den CSV-Dateien eingelesen.
+Die VST-Daten enthalten die Gene in den Zeilen und die acht
+Proben in den Spalten.
+
+### 2. Expressionsmatrix und Metadaten vorbereiten
+
+Die Spalte `gene_id` wird als Zeilenname der Expressionsmatrix
+verwendet. Anschließend werden die Metadaten in dieselbe
+Reihenfolge wie die Probenspalten der Expressionsmatrix gebracht.
+
+Mit `stopifnot()` wird kontrolliert, ob die Sample-IDs beider
+Datensätze anschließend vollständig übereinstimmen.
+
+### 3. Euklidische Distanz
+
+Mit `dist()` wird die euklidische Distanz zwischen den acht
+Proben berechnet. Da `dist()` die Distanzen zwischen Zeilen
+berechnet, wird die Expressionsmatrix zuvor mit `t()` transponiert.
+
+### 4. Hierarchisches Clustering
+
+Auf Basis der Distanzmatrix wird mit `hclust()` ein hierarchisches
+Clustering durchgeführt. Als primäres Verfahren wird Complete
+Linkage verwendet.
+
+### 5. Vergleich der Linkage-Verfahren
+
+Zusätzlich werden Average Linkage und Ward.D2 berechnet.
+Mit `cutree(..., k = 2)` werden jeweils zwei Hauptcluster erzeugt.
+
+Die Funktion `is_treatment_separation()` überprüft automatisch,
+ob jeweils alle behandelten und alle unbehandelten Proben
+gemeinsam in unterschiedlichen Clustern liegen.
+
+### 6. Auswahl hochvariabler Gene
+
+Für jedes Gen wird mit `var()` die Varianz über die acht Proben
+berechnet. Anschließend werden die Gene nach ihrer Varianz
+sortiert und die 500 variabelsten Gene für eine zusätzliche
+Clusteranalyse ausgewählt.
+
+Die Auswahl erfolgt ausschließlich anhand der Expressionsdaten
+und verwendet keine Information über den Behandlungsstatus.
+
+### 7. Sensitivitätsanalyse
+
+Um den Einfluss der Anzahl ausgewählter Features zu untersuchen,
+wird das Clustering mit den 100, 250, 500, 1.000 und 5.000
+variabelsten Genen wiederholt.
+
+Für jede Feature-Anzahl wird geprüft, ob die zwei resultierenden
+Cluster vollständig dem Behandlungsstatus entsprechen.
+
+### 8. Sample-Distance-Heatmap
+
+Die Distanzmatrix wird abschließend mit `pheatmap()` dargestellt.
+Dadurch können die paarweisen Distanzen zwischen allen acht
+Proben zusätzlich zur hierarchischen Baumstruktur betrachtet
+werden.
+
 ## Hierarchisches Clustering
 
 Zur Quantifizierung der Ähnlichkeit zwischen den Proben wurde die euklidische Distanz anhand der VST-transformierten Expressionswerte berechnet. Anschließend wurde ein hierarchisches Clustering mit Complete Linkage durchgeführt.
