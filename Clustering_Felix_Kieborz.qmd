@@ -1,0 +1,407 @@
+## Clustering
+
+### Fragestellung und Hypothese
+
+Mittels unüberwachtem Clustering wurde untersucht, ob sich die acht Airway-Proben allein anhand ihrer Genexpressionsprofile in biologisch sinnvolle Gruppen einteilen lassen. Dabei wurde insbesondere geprüft, ob die resultierende Clusterstruktur mit der Behandlung durch Dexamethason oder mit den vier untersuchten Zelllinien übereinstimmt.
+
+Es wurde die Hypothese aufgestellt, dass die Behandlung mit Dexamethason zu systematischen Veränderungen des Genexpressionsprofils führt und sich behandelte und unbehandelte Proben daher auch ohne Verwendung der bekannten Gruppeninformation voneinander trennen lassen.
+
+### Vorbereitung der Daten
+
+Für das Clustering wurden die nach der Qualitätskontrolle verbliebenen und mittels Variance Stabilizing Transformation (VST) transformierten Expressionsdaten verwendet. Der Datensatz enthielt 14.224 Gene für acht Proben.
+
+Eine zusätzliche z-Standardisierung der Gene wurde nicht durchgeführt. Die Genexpressionswerte lagen bereits VST-transformiert auf einer gemeinsamen Skala vor. Eine genweise Standardisierung würde jedem Gen unabhängig von seiner biologischen Variabilität ein vergleichbares Gewicht bei der Distanzberechnung geben und damit eine andere Fragestellung untersuchen.
+
+```{r}
+#| label: clustering-setup
+#| message: false
+#| warning: false
+
+library(readr)
+library(dplyr)
+library(tibble)
+library(pheatmap)
+library(cluster)
+
+vst_data <- read_csv(
+  "data/VST_transformierte_Daten.csv",
+  show_col_types = FALSE
+)
+
+metadata <- read_csv(
+  "data/Probeninformationen_Normalisierung.csv",
+  show_col_types = FALSE
+)
+
+vst_matrix <- vst_data %>%
+  column_to_rownames("gene_id") %>%
+  as.matrix()
+
+metadata <- metadata %>%
+  slice(match(colnames(vst_matrix), sample))
+
+stopifnot(
+  identical(metadata$sample, colnames(vst_matrix))
+)
+
+metadata <- metadata %>%
+  mutate(
+    cluster_label = paste(cell, dex, sep = "_")
+  )
+
+sample_labels <- metadata$cluster_label
+names(sample_labels) <- metadata$sample
+```
+
+### Hierarchisches Clustering
+
+Zur Quantifizierung der Ähnlichkeit zwischen den Proben wurde die euklidische Distanz anhand der VST-transformierten Expressionswerte berechnet. Da die Expressionsmatrix Gene in den Zeilen und Proben in den Spalten enthält, wurde die Matrix für die Berechnung der Distanzen zwischen den Proben transponiert. Anschließend wurde ein hierarchisches Clustering mit Complete Linkage durchgeführt.
+
+```{r}
+#| label: clustering-complete
+#| fig-cap: "Hierarchisches Clustering der acht Airway-Proben auf Basis euklidischer Distanzen der VST-transformierten Genexpressionsprofile."
+#| fig-width: 9
+#| fig-height: 6
+
+sample_dist <- dist(
+  t(vst_matrix),
+  method = "euclidean"
+)
+
+hc_complete <- hclust(
+  sample_dist,
+  method = "complete"
+)
+
+hc_complete_labels <- hc_complete
+hc_complete_labels$labels <- sample_labels[
+  hc_complete_labels$labels
+]
+
+plot(
+  hc_complete_labels,
+  main = "Hierarchisches Clustering der Airway-Proben",
+  xlab = "Zelllinie und Behandlung",
+  ylab = "Euklidische Distanz",
+  sub = ""
+)
+```
+
+Das hierarchische Clustering führte zu zwei klar getrennten Hauptclustern. Alle vier unbehandelten Proben (`untrt`) wurden einem Cluster und alle vier mit Dexamethason behandelten Proben (`trt`) dem zweiten Cluster zugeordnet. Die Information über den Behandlungsstatus wurde nicht für die Berechnung der Distanzen oder des hierarchischen Clusterings verwendet.
+
+Die Zuordnung der beiden mit `cutree()` erzeugten Hauptcluster wurde anschließend mit dem bekannten Behandlungsstatus verglichen.
+
+```{r}
+#| label: clustering-complete-table
+
+cluster_complete <- cutree(
+  hc_complete,
+  k = 2
+)
+
+table(
+  Cluster = cluster_complete,
+  Treatment = metadata$dex[
+    match(names(cluster_complete), metadata$sample)
+  ]
+)
+```
+
+Die Kreuztabelle bestätigt die vollständige Übereinstimmung der zwei Complete-Linkage-Cluster mit den beiden Behandlungsgruppen.
+
+Innerhalb beider Behandlungsgruppen zeigten insbesondere die Proben der Zelllinien N052611 und N061011 eine hohe Ähnlichkeit. Die Probe der Zelllinie N080611 wies innerhalb beider Behandlungsgruppen eine vergleichsweise größere Distanz zu den übrigen Proben auf.
+
+### Einfluss des Linkage-Verfahrens
+
+Zur Überprüfung der Robustheit wurden die vier in der Lehrveranstaltung behandelten Linkage-Verfahren Single, Average, Complete und Ward.D2 miteinander verglichen.
+
+```{r}
+#| label: clustering-linkage-robustness
+
+hc_single <- hclust(
+  sample_dist,
+  method = "single"
+)
+
+hc_average <- hclust(
+  sample_dist,
+  method = "average"
+)
+
+hc_ward <- hclust(
+  sample_dist,
+  method = "ward.D2"
+)
+
+is_treatment_separation <- function(cluster_assignment, metadata) {
+
+  dex_ordered <- metadata$dex[
+    match(names(cluster_assignment), metadata$sample)
+  ]
+
+  trt_cluster <- unique(
+    cluster_assignment[dex_ordered == "trt"]
+  )
+
+  untrt_cluster <- unique(
+    cluster_assignment[dex_ordered == "untrt"]
+  )
+
+  length(trt_cluster) == 1 &&
+    length(untrt_cluster) == 1 &&
+    trt_cluster != untrt_cluster
+}
+
+linkage_results <- tibble(
+  Linkage = c(
+    "Single",
+    "Average",
+    "Complete",
+    "Ward.D2"
+  ),
+  Treatment_Trennung = c(
+    is_treatment_separation(cutree(hc_single, k = 2), metadata),
+    is_treatment_separation(cutree(hc_average, k = 2), metadata),
+    is_treatment_separation(cutree(hc_complete, k = 2), metadata),
+    is_treatment_separation(cutree(hc_ward, k = 2), metadata)
+  )
+)
+
+knitr::kable(
+  linkage_results,
+  col.names = c(
+    "Linkage-Verfahren",
+    "Vollständige Trennung nach Behandlung"
+  )
+)
+```
+
+Average, Complete und Ward.D2 führten zu einer vollständigen Trennung nach Behandlungsstatus. Single Linkage reproduzierte diese Aufteilung dagegen nicht: Bei einer Unterteilung in zwei Cluster wurde die Probe `SRR1039517` separat von den übrigen sieben Proben abgegrenzt. Das Ergebnis zeigt, dass die Clusterstruktur nicht gegenüber jedem Linkage-Verfahren gleichermaßen robust ist. Dieses Verhalten ist mit der in der Lehrveranstaltung diskutierten Empfindlichkeit von Single Linkage gegenüber Verkettungseffekten vereinbar.
+
+### Einfluss der Feature-Auswahl
+
+Zusätzlich wurde untersucht, ob die Clusterstruktur von der Anzahl der verwendeten Gene abhängt. Hierzu wurden die Gene anhand ihrer Varianz über die acht Proben geordnet. Die Auswahl erfolgte unabhängig vom bekannten Behandlungsstatus.
+
+Zunächst wurden die 500 Gene mit der höchsten Varianz ausgewählt und erneut hierarchisch geclustert.
+
+```{r}
+#| label: clustering-top500
+#| fig-cap: "Hierarchisches Clustering der Airway-Proben unter Verwendung der 500 Gene mit der höchsten Varianz."
+#| fig-width: 9
+#| fig-height: 6
+
+gene_variance <- apply(
+  vst_matrix,
+  1,
+  var
+)
+
+top500_genes <- names(
+  sort(
+    gene_variance,
+    decreasing = TRUE
+  )
+)[1:500]
+
+vst_top500 <- vst_matrix[
+  top500_genes,
+  ,
+  drop = FALSE
+]
+
+sample_dist_top500 <- dist(
+  t(vst_top500),
+  method = "euclidean"
+)
+
+hc_top500 <- hclust(
+  sample_dist_top500,
+  method = "complete"
+)
+
+hc_top500_labels <- hc_top500
+hc_top500_labels$labels <- sample_labels[
+  hc_top500_labels$labels
+]
+
+plot(
+  hc_top500_labels,
+  main = "Clustering der 500 variabelsten Gene",
+  xlab = "Zelllinie und Behandlung",
+  ylab = "Euklidische Distanz",
+  sub = ""
+)
+```
+
+Auch bei Beschränkung auf die 500 variabelsten Gene wurden die behandelten und unbehandelten Proben vollständig voneinander getrennt.
+
+Zur Sensitivitätsanalyse wurde das Clustering anschließend für die 100, 250, 500, 1.000 und 5.000 variabelsten Gene wiederholt. Das resultierende Dendrogramm wurde jeweils in zwei Cluster unterteilt.
+
+```{r}
+#| label: clustering-feature-sensitivity
+#| tbl-cap: "Sensitivität der Clusterstruktur gegenüber der Anzahl ausgewählter hochvariabler Gene."
+
+n_genes <- c(
+  100,
+  250,
+  500,
+  1000,
+  5000
+)
+
+feature_results <- lapply(
+  n_genes,
+  function(n) {
+
+    selected_genes <- names(
+      sort(
+        gene_variance,
+        decreasing = TRUE
+      )
+    )[1:n]
+
+    matrix_subset <- vst_matrix[
+      selected_genes,
+      ,
+      drop = FALSE
+    ]
+
+    dist_subset <- dist(
+      t(matrix_subset),
+      method = "euclidean"
+    )
+
+    hc_subset <- hclust(
+      dist_subset,
+      method = "complete"
+    )
+
+    clusters <- cutree(
+      hc_subset,
+      k = 2
+    )
+
+    tibble(
+      genes = n,
+      treatment_separation = is_treatment_separation(
+        clusters,
+        metadata
+      )
+    )
+  }
+) %>%
+  bind_rows() %>%
+  mutate(
+    treatment_separation = if_else(
+      treatment_separation,
+      "ja",
+      "nein"
+    )
+  )
+
+knitr::kable(
+  feature_results,
+  col.names = c(
+    "Anzahl variabler Gene",
+    "Vollständige Trennung nach Behandlung"
+  )
+)
+```
+
+Bei Verwendung der 250, 500, 1.000 und 5.000 variabelsten Gene entsprachen die beiden Cluster vollständig den beiden Behandlungsgruppen. Bei einer starken Reduktion auf nur 100 Gene ging diese eindeutige Trennung dagegen verloren. In diesem Fall wurden die behandelte und unbehandelte Probe der Zelllinie N080611 gemeinsam von den übrigen sechs Proben abgegrenzt.
+
+### Visualisierung der Sample-Distanzen
+
+Zur Darstellung der paarweisen Unterschiede zwischen allen acht Proben wurde die euklidische Distanzmatrix zusätzlich als Heatmap visualisiert.
+
+```{r}
+#| label: clustering-distance-heatmap
+#| fig-cap: "Heatmap der paarweisen euklidischen Distanzen zwischen den acht Airway-Proben."
+#| fig-width: 9
+#| fig-height: 7
+
+sample_dist_matrix <- as.matrix(
+  sample_dist
+)
+
+rownames(sample_dist_matrix) <- sample_labels[
+  rownames(sample_dist_matrix)
+]
+
+colnames(sample_dist_matrix) <- sample_labels[
+  colnames(sample_dist_matrix)
+]
+
+pheatmap(
+  sample_dist_matrix,
+  cluster_rows = hc_complete_labels,
+  cluster_cols = hc_complete_labels,
+  main = "Sample-Distanzen der Airway-Proben"
+)
+```
+
+Die Heatmap bestätigt die im Complete-Linkage-Dendrogramm beobachtete Treatment-assoziierte Struktur. Gleichzeitig bleiben deutliche Unterschiede zwischen den einzelnen Zelllinien innerhalb der beiden Behandlungsgruppen bestehen.
+
+### k-Means als zweiter Clustering-Ansatz
+
+Als zusätzlicher, vom hierarchischen Verfahren unabhängiger Clustering-Ansatz wurde k-Means eingesetzt. Es wurden zwei Cluster vorgegeben. `set.seed()` stellt die Reproduzierbarkeit der zufälligen Initialisierung sicher; durch `nstart = 25` wird die Optimierung mit mehreren Startkonfigurationen wiederholt.
+
+Die Wahl von `k = 2` dient hier gezielt als Robustheitscheck der zuvor beobachteten Zweiteilung und ist daher nicht als vollständig datengetriebene Bestimmung der optimalen Clusterzahl zu verstehen.
+
+```{r}
+#| label: clustering-kmeans
+
+set.seed(2026)
+
+kmeans_result <- kmeans(
+  t(vst_matrix),
+  centers = 2,
+  nstart = 25
+)
+
+kmeans_table <- table(
+  Cluster = kmeans_result$cluster,
+  Treatment = metadata$dex
+)
+
+kmeans_table
+```
+
+Auch k-Means ordnete die acht Proben vollständig entsprechend ihrem Behandlungsstatus den beiden Clustern zu. Die Treatment-assoziierte Struktur ist damit nicht ausschließlich auf das hierarchische Complete-Linkage-Verfahren beschränkt.
+
+### Silhouettenanalyse
+
+Zur Bewertung der Qualität der k-Means-Zuordnung wurden Silhouettenwerte auf Basis derselben euklidischen Distanzmatrix berechnet. Positive Werte sprechen für eine passendere Zuordnung zum eigenen Cluster als zum jeweils anderen Cluster; Werte nahe 1 entsprechen einer besonders deutlichen Trennung.
+
+```{r}
+#| label: clustering-silhouette
+#| fig-cap: "Silhouettenwerte des k-Means-Clusterings mit k = 2."
+#| fig-width: 8
+#| fig-height: 5
+
+silhouette_result <- silhouette(
+  kmeans_result$cluster,
+  sample_dist
+)
+
+plot(
+  silhouette_result,
+  main = "Silhouette-Plot des k-Means-Clusterings"
+)
+
+mean_silhouette <- mean(
+  silhouette_result[, "sil_width"]
+)
+
+mean_silhouette
+```
+
+Die mittlere Silhouettenbreite beträgt ungefähr 0,25. Die Clusterzuordnung ist damit insgesamt positiv, jedoch nicht extrem stark separiert. Dies passt dazu, dass neben dem Behandlungsstatus weiterhin relevante Unterschiede zwischen den vier Zelllinien bestehen.
+
+Auf eine Elbow-Analyse zur datengetriebenen Wahl von `k` wurde verzichtet. Bei lediglich acht Proben ist eine systematische Untersuchung vieler Clusterzahlen nur eingeschränkt aussagekräftig; k-Means wurde hier ausschließlich als zusätzlicher Robustheitscheck für die bereits beobachtete Zweiteilung eingesetzt.
+
+### Zusammenfassung der Clustering-Analyse
+
+Das unüberwachte Clustering zeigt eine deutliche Dexamethason-assoziierte Struktur der untersuchten Genexpressionsdaten. Complete, Average und Ward.D2 Linkage trennten behandelte und unbehandelte Proben vollständig, während Single Linkage diese Struktur bei einer Unterteilung in zwei Cluster nicht reproduzierte. Die Treatment-Trennung blieb bei Verwendung von mindestens 250 hochvariablen Genen erhalten, ging jedoch bei einer starken Reduktion auf 100 Gene verloren.
+
+Auch k-Means mit zwei Clustern reproduzierte die vollständige Trennung nach Behandlungsstatus. Die mittlere Silhouettenbreite von etwa 0,25 zeigt jedoch, dass die beiden Gruppen trotz der konsistenten Zuordnung keine extrem kompakten und weit voneinander entfernten Cluster bilden. Insgesamt sprechen die Ergebnisse für einen robusten Einfluss der Dexamethason-Behandlung auf das globale Expressionsprofil, wobei gleichzeitig zelllinienspezifische Variation erhalten bleibt.
