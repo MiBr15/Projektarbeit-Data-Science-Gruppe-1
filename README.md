@@ -18,9 +18,9 @@ In den genannten Codeabschnitten wurde zunächst die Struktur des Inhalts des "A
 
 Nach erfolgter erster Betrachtung des Datensatzes wurden die einzelnen Informationsbereiche (Messdaten, Proben-, Geninformationen) als Variablen gespeichert.
 
-Messwerte_roh: Messdaten des Versuchs
-Probeninformationen: Anzahl und Kennung der Zelllinien (Sample)
-Geninformationen: Informationen zu Position, Art und Namen des Gens anhand der gene_id
+- Messwerte_roh: Messdaten des Versuchs
+- Probeninformationen: Anzahl und Kennung der Zelllinien (Sample)
+- Geninformationen: Informationen zu Position, Art und Namen des Gens anhand der gene_id
 
 ### Untersuchung der Struktur und Art der Verknüpfung der im Bioconductor-Format enthaltenen Daten
 
