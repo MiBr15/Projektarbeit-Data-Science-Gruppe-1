@@ -76,7 +76,8 @@ Zur Bestimmung einer erfolgreich durchgeführten VST-Transformation werden die D
 
 Dieser Abschnitt untersucht die Mean-Variance-Beziehung nach der VST. Hierfür wird zunächst die mittlere VST-Expression über alle Samples und die Varianz aller VST-Werte bestimmt und in einem Scatterplot dargestellt.
 
-Abbildung
+<img width="1600" height="1200" alt="VST_Mittelwert-Varianz-Beziehung" src="https://github.com/user-attachments/assets/ce8667b4-95c9-4635-872b-f15db44a46a5" />
+
 
 In der Graphik ist deutlich zu erkennen, dass die in der QC festgestellte Heteroskedastizität bedeutend abgeschwächt wurde und die VST-Transformation damit erfolgreich war.
 
