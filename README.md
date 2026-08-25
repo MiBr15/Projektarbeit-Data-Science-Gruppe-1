@@ -23,6 +23,9 @@ In den darauffolgenden Schritten kann diese Tabelle je nach Verwendungszweck sor
 - nur die wichtigsten Gen- und statistischen Informationen
 - nur hoch- oder nur runterregulierte Gene
 - die am stärksten hoch- und die am stärksten runterregulierten Gene
+Dabei stellt sich heraus, dass nach der Behandlung das Gen SPARCL1 mit der gene id ENSG00000152583 einenlog2-FC von 4,55 besitzt und am stärksten hochreguliert wurde. Dahingegen besitzt das Gen VCAM1 mit der gene id ENSG00000162692 einen log2-FC von -3,68 und wurde am stärksten runterreguliert. 
 Die gesamte annotierte Tabelle und die Tabelle mit nur den signifikanten Ergebnisse werden als besonders wichtig betrachtet, sodass diese als .csv gespeichert werden können.
 # Interaktiver MA-plot
-Anschließend wird ein MA-Plot aus den geshrinkten log2FoldChanges erstellt. Für jedes Gen wird auf der x-Achse der baseMean, also die mittlere normalisierte Count-Zahl, und auf der y-Achse der geshrinkte log2FoldChange dargestellt. Gene oberhalb von 0 sind unter Dexamethason höher exprimiert, Gene unterhalb von 0 niedriger exprimiert. Mithilfe von identify() können einzelne Punkte anschließend interaktiv ausgewählt und die zugehörigen Gene zusammen mit ihren biologischen und statistischen Informationen angezeigt werden.    
+Anschließend wird ein MA-Plot aus den geshrinkten log2FoldChanges erstellt. Für jedes Gen wird auf der x-Achse der baseMean, also die mittlere normalisierte Count-Zahl, und auf der y-Achse der geshrinkte log2FoldChange dargestellt. Gene oberhalb von 0 sind unter Dexamethason höher exprimiert, Gene unterhalb von 0 niedriger exprimiert. 
+<img width="1042" height="884" alt="MA-plot" src="https://github.com/user-attachments/assets/1186ce5e-06ec-413b-a468-45d9818f817b" />
+Mithilfe von identify() können einzelne Punkte anschließend interaktiv ausgewählt und die zugehörigen Gene zusammen mit ihren biologischen und statistischen Informationen angezeigt werden.    
