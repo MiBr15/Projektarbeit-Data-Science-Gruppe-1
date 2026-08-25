@@ -9,8 +9,7 @@ library(Rtsne)     # t-SNE
 library(uwot)      # UMAP
 
 # 2. VST‐Daten importieren
-pfad <- file.path("C:", "Users", "fleli", "Downloads",
-                  "VST_transformierte_Daten.csv")
+pfad <- file.path("VST_transformierte_Daten.csv")
 vst_df <- read_csv(pfad, col_names = TRUE)
 glimpse(vst_df)    # prüfen, dass gene_id + SRR-Spalten da sind
 
