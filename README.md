@@ -1,4 +1,4 @@
-\# Data-Science Projekt Gruppe 1
+# Data-Science Projekt Gruppe 1
 
 
 
@@ -6,13 +6,13 @@
 
 
 
-\## Projektstruktur
+## Projektstruktur
 
 
 
 ```
 
-└───\[QA-QC](QA-QC/README.md)
+└───[QA-QC](QA-QC/README.md)
 
 ```
 
