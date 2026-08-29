@@ -4,7 +4,7 @@
 Im Folgenden wird zunächst mithilfe des Quality Assessments (QA) die Qualität der Daten überprüft. Anschließend werden im Rahmen des Quality Controls (QC) spezifische Maßnahmen ergriffen, um die Datenqualität auf Grundlage der Ergebnisse des QA zu verbessern.
 Bei dem ausgewählten Datensatz handelt es sich um RNA-Seq-Daten. Ziel dieses Aufgabenbereichs ist es, die Qualität des Datensatzes zu kontrollieren und anschließend gezielte Veränderungen am Datensatz vorzunehmen, um die Qualität zukünftiger Auswertungen zu verbessern. Dazu können beispielsweise zuvor identifizierte Ausreißer oder Gene mit sehr geringen Count-Werten entfernt werden.
 
-*Bei der Erstellung des Codes habe ich ChatGPT unterstützend genutzt. Insgesamt habe ich mich etwa zwei Tage intensiv mit der Projektarbeit beschäftigt und anschließend im weiteren Verlauf immer wieder kleinere Anpassungen und Verbesserungen vorgenommen.*
+*Bei der Erstellung des Codes habe ich ChatGPT (GPT-5.6 Luna) unterstützend genutzt. Insgesamt habe ich mich etwa zwei Tage intensiv mit der Projektarbeit beschäftigt und anschließend im weiteren Verlauf immer wieder kleinere Anpassungen und Verbesserungen vorgenommen.*
 
 # Quality Assesment
 ## Pakete installieren
