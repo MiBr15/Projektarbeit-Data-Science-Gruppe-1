@@ -4,8 +4,8 @@ library (tidyverse)
 library (apeglm)
 
 # 2. Daten aus csv laden
-Daten_roh_long_filtered <- read_csv("Daten_roh_long_filtered.csv")
-Tab_Probeninformationen <- read_csv("Tab_Probeninformationen.csv")
+Daten_roh_long_filtered <- read_csv("data/Daten_roh_long_filtered.csv")
+Tab_Probeninformationen <- read_csv("data/Tab_Probeninformationen.csv")
 Tab_Probeninformationen <- as.data.frame(Tab_Probeninformationen)
 
 # 3. Daten_roh_long_filtered für DESeq2 vorbereiten. Umwandlung in eine wide-format count Matrix. Die Spaltennamen
@@ -165,12 +165,12 @@ sig_down %>%
 # Komplette annotierte Tabelle
 write_csv(
   res_df,
-  "DESeq2_Ergebnisse_alle_Gene.csv"
+  "data/DESeq2_Ergebnisse_alle_Gene.csv"
 )
 # Nur signifikante Gene
 write_csv(
   sig,
-  "DESeq2_signifikante_Gene.csv"
+  "data/DESeq2_signifikante_Gene.csv"
 )
 
 #20. MA-Plot aus geshrinkten LFCs
