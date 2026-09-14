@@ -156,6 +156,6 @@ colSums(is.na(Daten_roh_long))
 
 write.csv(
   Daten_roh_long,
-  "Daten_roh_long.csv",
+  "data/Daten_roh_long.csv",
   row.names = FALSE
 )
