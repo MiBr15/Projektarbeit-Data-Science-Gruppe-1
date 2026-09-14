@@ -12,7 +12,7 @@ library(pheatmap)
 # 2. csv einlesen 
 
 Daten_roh_long <- read.csv(
-  "Daten_roh_long.csv",
+  "data/Daten_roh_long.csv",
   stringsAsFactors = FALSE
 )
 
