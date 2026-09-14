@@ -9,14 +9,14 @@ library(readr)
 # 2. DATEN EINLESEN
 
 data <- read_csv(
-  "Daten_roh_long.csv",
+  "data/Daten_roh_long.csv",
   show_col_types = FALSE
 )
 
 
 # 3. AUSGABEVERZEICHNIS
 
-output_dir <- "C:/Users/komfo/OneDrive/Desktop/MASTER/2. Semester/limma_ausgabe"
+output_dir <- "data"
 
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
