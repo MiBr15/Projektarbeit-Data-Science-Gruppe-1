@@ -41,6 +41,8 @@ Aufgrund der kleinen Stichprobengröße von acht Proben werden insbesondere t-SN
 .
 ├── README.md
 ├── report_Gruppe_1.qmd
+├── report_Gruppe_1.html
+├── code_Gruppe_1.R
 ├── data/
 ├── images/
 └── analysis/
