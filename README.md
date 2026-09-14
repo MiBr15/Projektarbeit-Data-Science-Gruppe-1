@@ -1,6 +1,17 @@
 # ReadMe - Preprocessing_Code.R
 
-## Allgemein:
+## Erklärung zur KI-Nutzung
+
+Zur Erstellung des Codes „Preprocessing_Code.R“ wurde die ChatGPT-Version „GPT-5.6 Luna“ unterstützend eingesetzt. 
+Die Nutzung beschränkte sich dabei auf:
+
+- Die Erstellung und Korrektur der Codesyntax
+- Umsetzung und Korrektur einzelner Codeabschnitte
+- Klärung von Fragen zu R-Funktionen und Paketen
+
+Der grundlegende Aufbau sowie die verwendeten Konzepte des Codes wurden vorgegeben. Sämtliche von der KI vorgeschlagenen Codeabschnitte wurden auf fachliche Richtigkeit sowie ihre Sinnhaftigkeit überprüft und nachvollzogen.
+
+## Allgemein
 
 Der in diesem Branch vorliegende Code "Preprocessing_Code.R" dient der weiteren Prozessierung der Rohdaten nach erfolgter Low-Count-Filterung im Branch "QC-Emily". Hierbei werden die gefilterten Rohdaten, nach einer Kontrolle der Datenqualität und -integrität, mittels des Bioconductor-Pakets DESeq2 einer Size-Factor-Normalisierung unterzogen und nachfolgend zudem eine Variance Stabilizing Transformation durchgeführt.
 
