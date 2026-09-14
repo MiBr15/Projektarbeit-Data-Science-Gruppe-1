@@ -16,7 +16,7 @@ library(tibble)
 
 #2. Einlesen der gefilterten Rohdaten
 
-fil_Daten <- read.csv("Daten_roh_long_filtered.csv")
+fil_Daten <- read.csv("data/Daten_roh_long_filtered.csv")
 
 #3. Prüfung der überreichten Daten_roh_long_filtered.csv
 
@@ -214,7 +214,8 @@ plot(
 
 #15. Ergebnisse speichern
 
-output_dir <- getwd()
+output_dir_data <- "data"
+output_dir_images <- "images"
 
 vst_ergebnisse <- as.data.frame(vst_matrix) %>%
   rownames_to_column("gene_id")
@@ -228,7 +229,10 @@ normalisierungs_info <- Probeninformationen %>%
   )
 
 png(
-  filename = file.path(output_dir, "VST_Mittelwert-Varianz-Beziehung.png"),
+  filename = file.path(
+    output_dir_images, 
+    "VST_Mittelwert-Varianz-Beziehung.png"
+  ),
   width = 1600,
   height = 1200,
   res = 200
@@ -250,7 +254,7 @@ dev.off()
 write_csv(
   normalisierte_ergebnisse,
   file.path(
-    output_dir,
+    output_dir_data,
     paste0("DESeq2_normalisierte_counts.csv")
   ),
   na = ""
@@ -259,7 +263,7 @@ write_csv(
 write_csv(
   vst_ergebnisse,
   file.path(
-    output_dir,
+    output_dir_data,
     paste0("VST_transformierte_Daten.csv")
   ),
   na = ""
@@ -268,7 +272,7 @@ write_csv(
 write_csv(
   normalisierungs_info,
   file.path(
-    output_dir,
+    output_dir_data,
     paste0("Probeninformationen_Normalisierung.csv")
   ),
   na = ""
