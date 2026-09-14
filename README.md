@@ -1,9 +1,21 @@
 # ReadMe - Data Wrangling (AnalyseDatenstruktur.R)
 
-## Allgemein:
+## Erklärung zur KI-Nutzung
+
+Zur Erstellung des Codes „Preprocessing_Code.R“ wurde die ChatGPT-Version „GPT-5.6 Luna“ unterstützend eingesetzt. 
+Die Nutzung beschränkte sich dabei auf:
+
+- Die Erstellung und Korrektur der Codesyntax
+- Umsetzung und Korrektur einzelner Codeabschnitte
+- Klärung von Fragen zu R-Funktionen und Paketen
+
+Der grundlegende Aufbau sowie die verwendeten Konzepte des Codes wurden vorgegeben. Sämtliche von der KI vorgeschlagenen Codeabschnitte wurden auf fachliche Richtigkeit sowie ihre Sinnhaftigkeit überprüft und nachvollzogen.
+
+
+## Allgemein
 Der in diesem Branch vorliegende Code "AnalyseDatenstruktur.R" dient der Untersuchung der im Bioconductor-Paket hinterlegten Rohdaten der Abhandlung und der anschließenden Umwandlung in ein für die weitere Analyse vorteilhafteres Format. Die einzelnen Schritte und Anwendungshinweise werden im Folgenden erklärt.
 
-## Struktur und Funktion des Codes:
+## Struktur und Funktion des Codes
 
 ### Bioconductor-Paket erhalten und Paketstruktur analysieren
 
