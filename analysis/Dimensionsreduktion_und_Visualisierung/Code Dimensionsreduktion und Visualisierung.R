@@ -4,12 +4,13 @@
 # 1. Pakete laden
 library(readr)     # CSV einlesen
 library(dplyr)     # Data-Wrangling
+library(tibble)
 library(ggplot2)   # Plotting
 library(Rtsne)     # t-SNE
 library(uwot)      # UMAP
 
 # 2. VST‐Daten importieren
-pfad <- file.path("VST_transformierte_Daten.csv")
+pfad <- file.path("data", "VST_transformierte_Daten.csv")
 vst_df <- read_csv(pfad, col_names = TRUE)
 glimpse(vst_df)    # prüfen, dass gene_id + SRR-Spalten da sind
 
@@ -45,6 +46,7 @@ tsne_df  <- as_tibble(tsne_res$Y, .name_repair = "minimal") %>%
 ## 5.3 UMAP (n_neighbors automatisch anpassen)
 n_nbrs   <- min(15, n_samp - 1)
 message("Verwende UMAP n_neighbors = ", n_nbrs)
+set.seed(42)
 umap_res <- umap(mat_scaled, n_neighbors = n_nbrs, min_dist = 0.1)
 umap_df  <- as_tibble(umap_res, .name_repair = "minimal") %>%
   set_names("UMAP1","UMAP2") %>%
