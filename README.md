@@ -122,3 +122,7 @@ Die mittlere Silhouettenbreite beträgt ungefähr **0,25**. Damit ist die Cluste
 Die Clusteranalyse zeigt eine deutliche Dexamethason-assoziierte Struktur der Expressionsdaten. Complete, Average und Ward.D2 Linkage sowie k-Means mit zwei Clustern trennen behandelte und unbehandelte Proben vollständig. Single Linkage reproduziert diese Struktur dagegen nicht.
 
 Die Treatment-Trennung bleibt bei Verwendung von mindestens 250 hochvariablen Genen stabil, geht bei einer starken Reduktion auf 100 Gene jedoch verloren. Die Silhouettenanalyse zeigt zusätzlich, dass die beiden Treatment-Cluster trotz konsistenter Zuordnung nur moderat voneinander getrennt sind. Insgesamt bleibt somit neben dem Treatment-Effekt eine relevante zelllinienspezifische Variation erhalten.
+
+## Hilfsmittel
+
+Für die Überprüfung und Korrektur des Codes wurde stellenweise ChatGPT (Modell: GPT-5.6 Sol) verwendet.
