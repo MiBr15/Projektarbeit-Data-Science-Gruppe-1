@@ -111,6 +111,4 @@ Der vollständige Bericht kann mit Quarto aus `report_Gruppe_1.qmd` erzeugt werd
 
 ## Nutzung von KI-Werkzeugen
 
-Für einzelne Teile des Projekts wurden KI-Werkzeuge unterstützend eingesetzt, beispielsweise zur Erstellung und Korrektur von R-Syntax, zur Klärung von Fragen zu R-Funktionen und Paketen sowie zur Überprüfung einzelner Analyseschritte.
-
-Die Auswahl der grundlegenden Analysekonzepte und Methoden erfolgte durch die Projektgruppe. KI-generierte Vorschläge wurden überprüft, angepasst und in die gemeinsame reproduzierbare Analyse integriert.
+Für einzelne Teile des Projekts wurden KI-Werkzeuge unterstützend eingesetzt. In Data Wrangling und Preprocessing wurde ChatGPT GPT-5.6 Luna insbesondere zur Erstellung und Korrektur von R-Syntax, zur Umsetzung einzelner Codeabschnitte sowie zur Klärung von Fragen zu R-Funktionen und Paketen verwendet. Für QA/QC wurde GPT-5.6 Luna ebenfalls unterstützend eingesetzt. Die Dimensionsreduktion wurde mit OpenAI o4-mini im TU-Braunschweig-Chatbot unterstützt. Für die Überprüfung und Korrektur des Clustering-Codes wurde stellenweise ChatGPT GPT-5.6 Sol verwendet.
