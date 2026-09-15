@@ -1,4 +1,4 @@
-# ============================================================
+## ============================================================
 # Pakete
 # ============================================================
 
@@ -159,7 +159,7 @@ colSums(is.na(Daten_roh_long))
 
 write.csv(
   Daten_roh_long,
-  "data/Daten_roh_long.csv",
+  "Daten_roh_long.csv",
   row.names = FALSE
 )
 
@@ -826,6 +826,19 @@ normalisierungs_info <- Probeninformationen %>%
   mutate(
     size_factor = sizeFactors(dds)
   )
+
+output_dir_data <- "data"
+output_dir_images <- "images"
+
+if (!dir.exists(output_dir_data)) {
+  dir.create(output_dir_data, recursive = TRUE)
+}
+
+if (!dir.exists(output_dir_images)) {
+  dir.create(output_dir_images, recursive = TRUE)
+}
+
+
 
 png(
   filename = file.path(
